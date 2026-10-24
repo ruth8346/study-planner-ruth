@@ -1,0 +1,5 @@
+# Locked versions used for both runs (results/*.json also records them).
+anthropic==2.1.0
+claude-agent-sdk==0.2.173
+httpx2==2.16.0
+pytest==8.3.4

@@ -1,0 +1,96 @@
+{
+  "name": "Ruth's study planner: two sessions",
+  "model": "claude-opus-5-5",
+  "effort": "medium",
+  "sessions": [
+    {
+      "resume": false,
+      "turns": [
+        "Hi! Please remember how I like to study: in the mornings, at most 3 hours a day, in 25-minute pomodoro sessions.",
+        "Add my deadlines: Algorithms final exam on 2026-11-10 (about 12 hours of prep), Databases assignment 3 due 2026-11-03 (about 5 hours), and Operating Systems lab report due 2026-11-06 (about 3 hours).",
+        "I'm starting the Algorithms prep with dynamic programming. Get me a short overview of it from Wikipedia so I know where to begin.",
+        "Decision: the Databases assignment comes first this week, and I'm skipping the optional OS reading. Please remember that."
+      ]
+    },
+    {
+      "resume": false,
+      "turns": [
+        "Hi again. What do you remember about how I like to study, and what did I decide to prioritize?",
+        "Change of plans: from now on I can only study in the evenings, but up to 4 hours a day. Update that.",
+        "I submitted the Databases assignment, mark it done. Then build me a study plan for the week starting 2026-11-02."
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "tasks_saved",
+      "type": "task_exists",
+      "on": "state",
+      "description": "The Algorithms exam was saved to tasks.json with its due date",
+      "course_contains": "algorithm",
+      "due_date": "2026-11-10",
+      "kind": "exam"
+    },
+    {
+      "id": "memory_saved_session1",
+      "type": "memory_contains",
+      "on": "state",
+      "description": "After session 1 the memory store holds the morning / 3-hours preference and the Databases-first decision",
+      "at": "session_1",
+      "all_of": [["morning"], ["3"], ["database"]]
+    },
+    {
+      "id": "external_tool_used",
+      "type": "tool_called",
+      "on": "tool log",
+      "description": "Turn 3 called the external Wikipedia tool about dynamic programming, without error",
+      "turn": 3,
+      "name": "wiki_summary",
+      "input_contains": ["dynamic"]
+    },
+    {
+      "id": "memory_recalled_session2",
+      "type": "answer_contains",
+      "on": "answer",
+      "description": "Session 2 (new instance, new conversation) recalls the morning preference and the Databases decision",
+      "turn": 5,
+      "all_of": [["morning"], ["database"]]
+    },
+    {
+      "id": "contradiction_overwrites",
+      "type": "memory_contains",
+      "on": "state",
+      "description": "After the contradicting request the memory holds evening and 4 hours",
+      "at": "final",
+      "all_of": [["evening"], ["4"]]
+    },
+    {
+      "id": "no_stale_preference",
+      "type": "memory_excludes",
+      "on": "state",
+      "description": "No memory entry still says morning (unless it is the entry that now says evening)",
+      "at": "final",
+      "term": "morning",
+      "unless": "evening"
+    },
+    {
+      "id": "task_completed",
+      "type": "task_status",
+      "on": "state",
+      "description": "The Databases task is marked done in tasks.json",
+      "course_contains": "database",
+      "status": "done"
+    },
+    {
+      "id": "plan_follows_new_prefs",
+      "type": "plan_matches",
+      "on": "state",
+      "description": "plan.json uses the new preference (evening, 4h/day), includes Algorithms and OS, excludes the finished Databases task",
+      "max_hours_per_day": 4,
+      "min_hours_per_day": 4,
+      "time_of_day": "evening",
+      "includes": ["algorithm", "operating"],
+      "excludes": ["database"]
+    }
+  ]
+}
