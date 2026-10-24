@@ -4,3 +4,4 @@ API/state/
 SDK/state/
 .env
 *.docx
+make_docx.py
