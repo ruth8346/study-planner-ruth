@@ -3,3 +3,4 @@ __pycache__/
 API/state/
 SDK/state/
 .env
+*.docx
